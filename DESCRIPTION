@@ -1,0 +1,36 @@
+Package: bcgp
+Title: Bayesian Composite Gaussian Process Modeling
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Casey",
+           family = "Davis",
+           role = c("aut", "cre"),
+           email = "cbdavis33@gmail.com")
+Description: This package implements a Bayesian version of Gaussian Process
+    regression. There are options for fitting stationary or non-stationary 
+    models and composite or non-composite models.
+License: GPL (>=3)
+Encoding: UTF-8
+LazyData: true
+Biarch: true
+Depends: 
+    R (>= 3.4.0)
+Imports: 
+    methods,
+    Rcpp (>= 0.12.0),
+    rstan (>= 2.18.1),
+    rstantools (>= 2.0.0)
+LinkingTo: 
+    BH (>= 1.66.0),
+    Rcpp (>= 0.12.0),
+    RcppEigen (>= 0.3.3.3.0),
+    rstan (>= 2.18.1),
+    StanHeaders (>= 2.18.0)
+SystemRequirements: GNU make
+RoxygenNote: 7.0.2
+Suggests: 
+    lhs,
+    knitr,
+    rmarkdown,
+    mvnfast
+VignetteBuilder: knitr
