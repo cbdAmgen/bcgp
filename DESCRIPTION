@@ -32,5 +32,6 @@ Suggests:
     lhs,
     knitr,
     rmarkdown,
-    mvnfast
+    mvnfast,
+    testthat (>= 2.1.0)
 VignetteBuilder: knitr

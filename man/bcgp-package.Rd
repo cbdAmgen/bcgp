@@ -4,10 +4,19 @@
 \name{bcgp-package}
 \alias{bcgp-package}
 \alias{bcgp}
-\title{The 'bcgp' package.}
+\title{Bayesian Composite Gaussian Process Modeling}
 \description{
-A DESCRIPTION OF THE PACKAGE
+The \pkg{bcgp} package enables Gaussian process (GP) regression
+models to be estimated using Markov Chain Monte Carlo (MCMC).
+}
+\details{
+The \pkg{bcgp} package supports both stationary and non-stationary
+models. For non-stationary models, the non-stationarity is introduced by
+having a non-constant variance. This package also supports composite and
+non-composite models, where \emph{composite} models are a sum of a global GP
+that captures the overall trend and a local GP that makes small adjustments
+around the trend.
 }
 \references{
-Stan Development Team (2019). RStan: the R interface to Stan. R package version 2.19.2. https://mc-stan.org
+Prediction Using a Bayesian Heteroscedastic Composite Gaussian Process (2020)
 }
