@@ -13,9 +13,9 @@
 \describe{
   \item{\code{raster}}{A logical indicating whether the 2-dimensional process
   should be plotted in points or smoothed out as in
-  \code{\link[ggplot2]{geom_raster}}. If the \code{bcgpsims} object was
-  created with randomly generated test data (i.e., not in a grid), this
-  argument is ignored, and the plot will be points and not smoothed out.
+  \code{\link[ggplot2:geom_raster]{geom_raster()}}. If the \code{bcgpsims}
+  object was created with randomly generated test data (i.e., not in a grid),
+  this argument is ignored, and the plot will be points and not smoothed out.
   Only useful for 2-D data.}
 }}
 
@@ -44,14 +44,14 @@ like and understand the interaction between the variance process
 Plotting is only supported for one and two-dimensional data.
 }
 \examples{
-nsComp <- simulate_from_model(composite = TRUE, stationary = FALSE, d = 1,
-                              decomposition = TRUE)
+ns_comp <- bcgpsims(composite = TRUE, stationary = FALSE,noise = FALSE,
+                    d = 1)
 z <- plot(nsComp, print = FALSE, decomposition = TRUE)
 
-sNonComp <- simulate_from_model(composite = FALSE, stationary = TRUE, d = 2,
-                                grid_test = TRUE, grid_test_size = 10)
-plot(sNonComp, process = "y", raster = TRUE)
-plot(sNonComp, process = "y", raster = FALSE)
+noncomp_s <- bcgpsims(composite = FALSE, stationary = TRUE, d = 2,
+                      grid_test = TRUE, grid_test_size = 10)
+plot(noncomp_s, process = "y", raster = TRUE)
+plot(noncomp_s, process = "y", raster = FALSE)
 }
 \seealso{
 \linkS4class{bcgpsims}

@@ -85,9 +85,9 @@ bcgpsims <- function(composite = TRUE, stationary = FALSE,
 #' \describe{
 #'   \item{\code{raster}}{A logical indicating whether the 2-dimensional process
 #'   should be plotted in points or smoothed out as in
-#'   \code{\link[ggplot2]{geom_raster}}. If the \code{bcgpsims} object was
-#'   created with randomly generated test data (i.e., not in a grid), this
-#'   argument is ignored, and the plot will be points and not smoothed out.
+#'   \code{\link[ggplot2:geom_raster]{geom_raster()}}. If the \code{bcgpsims}
+#'   object was created with randomly generated test data (i.e., not in a grid),
+#'   this argument is ignored, and the plot will be points and not smoothed out.
 #'   Only useful for 2-D data.}
 #' }
 #' @param process Which process to plot: the data process and/or the variance
@@ -102,14 +102,14 @@ bcgpsims <- function(composite = TRUE, stationary = FALSE,
 #' objects that can be further customized using the \pkg{ggplot2} package.
 #' @seealso \linkS4class{bcgpsims}
 #' @examples
-#' nsComp <- simulate_from_model(composite = TRUE, stationary = FALSE, d = 1,
-#'                               decomposition = TRUE)
+#' ns_comp <- bcgpsims(composite = TRUE, stationary = FALSE,noise = FALSE,
+#'                     d = 1)
 #' z <- plot(nsComp, print = FALSE, decomposition = TRUE)
 #'
-#' sNonComp <- simulate_from_model(composite = FALSE, stationary = TRUE, d = 2,
-#'                                 grid_test = TRUE, grid_test_size = 10)
-#' plot(sNonComp, process = "y", raster = TRUE)
-#' plot(sNonComp, process = "y", raster = FALSE)
+#' noncomp_s <- bcgpsims(composite = FALSE, stationary = TRUE, d = 2,
+#'                       grid_test = TRUE, grid_test_size = 10)
+#' plot(noncomp_s, process = "y", raster = TRUE)
+#' plot(noncomp_s, process = "y", raster = FALSE)
 #' @export
 setMethod("plot", signature(x = "bcgpsims"),
           function(x, ..., process = c("y", "variance"),
@@ -118,9 +118,9 @@ setMethod("plot", signature(x = "bcgpsims"),
             process <- match.arg(process, several.ok = TRUE)
 
             if("y" %in% process){
-              yPlot <- plotDataSims(x, decomposition, ...)
-              if(print) print(yPlot)
-              if(length(process) == 1) return(yPlot)
+              plot_y <- plot_data_sims(x, decomposition, ...)
+              if(print) print(plot_y)
+              if(length(process) == 1) return(plot_y)
             }
 
             if("variance" %in% process){
@@ -128,13 +128,13 @@ setMethod("plot", signature(x = "bcgpsims"),
                 warning(strwrap(prefix = " ", initial = "",
                                 "No need to plot the variance process, since the
                                 variance is constant in a stationary process."))
-                varPlot <- ggplot2::ggplot()
+                plot_var <- ggplot2::ggplot()
               }else{
-                varPlot <- plotVarSims(x, ...)
-                if(print) print(varPlot)
-                if(length(process) == 1) return(varPlot)
+                plot_var <- plot_var_sims(x, ...)
+                if(print) print(plot_var)
+                if(length(process) == 1) return(plot_var)
               }
             }
-            return(invisible(list(dataProcess = yPlot,
-                                  varianceProcess = varPlot)))
+            return(invisible(list(data_process = plot_y,
+                                  variance_process = plot_var)))
           })
