@@ -76,8 +76,8 @@ setClass(Class = "bcgpsims",
 #' parameter.
 #' @seealso \code{\link{bcgpmodel}}
 #' @examples
-#' simData <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
-#' bcgpmodel(x = simData@training$x, y = simData@training$y
+#' data_sim <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
+#' bcgpmodel(x = data_sim@training$x, y = data_sim@training$y
 #'           composite = TRUE, stationary = FALSE, noise = TRUE)
 #' @export
 setClass(Class = "bcgpmodel",
