@@ -54,5 +54,8 @@ create_parameter_list(composite = TRUE, stationary = FALSE, noise = FALSE,
 }
 \seealso{
 \code{\link{simulate_from_model}} \code{\link{bcgpsims}}
+
+Other preprocessing functions: 
+\code{\link{bcgpmodel}}
 }
 \concept{preprocessing functions}

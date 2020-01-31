@@ -19,3 +19,10 @@ data_sim <- bcgpsims(composite = composite, stationary = stationary,
 
 plot(data_sim)
 
+my_model <- bcgpmodel(x = data_sim@training$x, y = data_sim@training$y,
+                      composite = TRUE, stationary = FALSE, noise = FALSE)
+
+## If you want to change the priors
+# my_model@priors$w$alpha <- 2
+# my_model@priors$w
+

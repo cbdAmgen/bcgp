@@ -39,6 +39,10 @@ create_parameter_list <- function(composite = TRUE, stationary = FALSE,
 
   d <- as.integer(d)
 
+  validate_logical(composite)
+  validate_logical(stationary)
+  validate_logical(noise)
+
   if(isTRUE(composite)){
     if(isFALSE(stationary)){
       param_list <- create_param_comp_ns(d)
