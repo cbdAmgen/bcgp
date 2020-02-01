@@ -30,3 +30,14 @@ check_valid_cor_mat <- function(x){
   return(TRUE)
 
 }
+
+get_sampler_args_stan <- function(x){
+
+  list(algorithm = "NUTS",
+       iter = x@stan_args[[1]]$iter,
+       warmup = x@stan_args[[1]]$warmup,
+       thin = x@stan_args[[1]]$thin,
+       seed = sapply(x@stan_args, function(z) z$seed),
+       control = attr(x@sim$samples[[1]], "args")$control)
+
+}

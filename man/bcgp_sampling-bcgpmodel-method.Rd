@@ -11,10 +11,10 @@
   chains = 4L,
   cores = getOption("mc.cores", 1L),
   init = "random",
-  numUpdates = 5,
-  nAdapt = 1000,
+  num_updates = 5,
+  num_adapt = 1000,
   burnin = 1000,
-  nmcmc = 10000,
+  n_mcmc = 10000,
   thin = 1,
   ...,
   control = NULL
@@ -27,7 +27,9 @@
 implemented by Stan, or \code{"MH"} for a Metropolis-Hastings algorithm}
 
 \item{scaled}{A logical indicating whether the data should be scaled before
-fitting. It is highly recommended to scale the data before fitting.}
+fitting. It is highly recommended to scale the data before fitting. Defaults
+to \code{TRUE}. Currently, only \code{scaled = TRUE} is supported, but that
+will change in the near future.}
 
 \item{chains}{A positive integer specifying the number of Markov chains}
 
@@ -51,17 +53,22 @@ distributions.
 \code{init} via list:
 Set initial values by providing a list equal in length to the number of
 Markov chains. A call to \code{create_inits()} will assist in the correct
-creation of this list.
+creation of this list. This is not currently supported, but will be in the
+future.
 }}
 
-\item{numUpdates}{A positive integer for the number of updates in the
+\item{num_updates}{A positive integer for the number of updates in the
 proposal stepsize adaptation phase. Ignored if \code{algorithm = "NUTS"}.}
+
+\item{num_adapt}{A positive integer for the number of samples within each
+update in the proposal stepsize adaptation phase. Ignored if
+\code{algorithm = "NUTS"}.}
 
 \item{burnin}{A positive integer for the number of burnin samples to discard
 after the stepsize adaptation phase is finished. This is equivalent to the
-parameter \code{warmup} in \code{\link[rstan]{stan}}}
+parameter \code{warmup} in \code{\link[rstan]{stan}}.}
 
-\item{nmcmc}{The number of samples to be kept for each Markov chain.}
+\item{n_mcmc}{The number of samples to be kept for each Markov chain.}
 
 \item{thin}{A positive integer specifying the period for saving samples. The
 default is 1, and this number should not be changed, as thinning isn't
@@ -70,11 +77,11 @@ necessary in these models, and it throws away information. Currently, only
 future.}
 
 \item{...}{optional parameters, only if \code{algorithm = "NUTS"}. See the
-documentation for \code{\link[rstan]{stan}}. Any}
+documentation for \code{\link[rstan]{stan}}.}
 
-\item{numAdapt}{A positive integer for the number of samples within each
-update in the proposal stepsize adaptation phase. Ignored if
-\code{algorithm = "NUTS"}.}
+\item{control}{A named list of parameters to control the NUTS algorithm's
+behavior. It defaults to NULL so all the default values are used. Ignored
+unless  \code{algorithm = "NUTS"}.}
 }
 \value{
 An instance of S4 class \code{bcgpfit}. It contains information
