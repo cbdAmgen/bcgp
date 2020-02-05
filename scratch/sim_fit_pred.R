@@ -1,7 +1,7 @@
 rm(list = ls())
 cat("\014")
 
-# library(bcgp)
+library(bcgp)
 
 composite <- TRUE
 stationary <- FALSE
@@ -20,7 +20,8 @@ data_sim <- bcgpsims(composite = composite, stationary = stationary,
 plot(data_sim)
 
 my_model_comp_ns <- bcgpmodel(x = data_sim@training$x, y = data_sim@training$y,
-                              composite = TRUE, stationary = FALSE, noise = FALSE)
+                              composite = TRUE, stationary = FALSE,
+                              noise = FALSE)
 
 ## If you want to change the priors
 # my_model@priors$w$alpha <- 2
@@ -33,6 +34,10 @@ my_fit_comp_ns <- bcgp_sampling(my_model_comp_ns, algorithm = "NUTS",
                                 control = list(adapt_delta = 0.99,
                                                max_treedepth = 13))
 
+summary(my_fit_comp_ns)
+print(my_fit_comp_ns)
+my_fit_comp_ns
+
 ##################################################
 
 my_model_comp_s <- bcgpmodel(x = data_sim@training$x, y = data_sim@training$y,
@@ -44,6 +49,10 @@ my_fit_comp_s <- bcgp_sampling(my_model_comp_s, algorithm = "NUTS",
                                n_mcmc = 2000,
                                control = list(adapt_delta = 0.99,
                                               max_treedepth = 13))
+
+summary(my_fit_comp_s)
+print(my_fit_comp_s)
+my_fit_comp_s
 
 ####################################################
 
@@ -59,6 +68,9 @@ my_fit_noncomp_s <- bcgp_sampling(my_model_noncomp_s, algorithm = "NUTS",
                                   control = list(adapt_delta = 0.99,
                                                  max_treedepth = 13))
 
+summary(my_fit_noncomp_s)
+print(my_fit_noncomp_s)
+my_fit_noncomp_s
 ####################################################
 
 my_model_noncomp_ns <- bcgpmodel(x = data_sim@training$x,
@@ -72,3 +84,9 @@ my_fit_noncomp_ns <- bcgp_sampling(my_model_noncomp_ns, algorithm = "NUTS",
                                    n_mcmc = 2000,
                                    control = list(adapt_delta = 0.99,
                                                   max_treedepth = 13))
+
+summary(my_fit_noncomp_ns)
+print(my_fit_noncomp_ns)
+my_fit_noncomp_ns
+
+print(my_fit_noncomp_ns, pars = "V")
