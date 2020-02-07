@@ -75,7 +75,7 @@ simulate_from_model <- function(composite = TRUE, stationary = FALSE,
 
   x_matrices <- create_x_and_x_test(d, n, n_test,
                                     grid_test = extra_args$grid_test,
-                                    randomX = extra_args$randomX,
+                                    randomX1D = extra_args$randomX1D,
                                     grid_test_size = extra_args$grid_test_size)
   x <- x_matrices$x
   x_test <- x_matrices$x_test
@@ -299,11 +299,11 @@ sims_unpack_dots <- function(d, ...){
   }
 
 
-  randomX <- ifelse("randomX1D" %in% dots_names &&
+  randomX1D <- ifelse("randomX1D" %in% dots_names &&
                       (isTRUE(dots$randomX1D) || isFALSE(dots$randomX1D)),
                     dots$randomX1D, FALSE)
 
-  return(list(randomX = randomX, grid_test = grid_test,
+  return(list(randomX1D = randomX1D, grid_test = grid_test,
               grid_test_size = grid_test_size))
 
 }

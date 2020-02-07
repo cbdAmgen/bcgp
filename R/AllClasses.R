@@ -139,8 +139,8 @@ setOldClass("mcmc.list")
 #' @seealso \code{\link{bcgp_sampling}} \linkS4class{bcgpmodel}
 #' \code{\link{bcgpmodel}}
 #' @examples
-#' simData <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
-#' model <- bcgpmodel(x = simData@training$x, y = simData@training$y
+#' data_sim <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
+#' model <- bcgpmodel(x = data_sim@training$x, y = data_sim@training$y,
 #'                    composite = TRUE, stationary = FALSE, noise = TRUE)
 #' \dontrun{
 #' bcgp_sampling(model, algorithm = "NUTS", scaled = TRUE, chains = 3L,
@@ -211,8 +211,8 @@ setClass(Class = "bcgpfit",
 #' \linkS4class{bcgpfit} \code{\link[bcgp]{predict}}
 #' \code{\link[bcgp]{posterior_predict}}
 #' @examples
-#' simData <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
-#' model <- bcgpmodel(x = simData@training$x, y = simData@training$y
+#' data_sim <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
+#' model <- bcgpmodel(x = data_sim@training$x, y = data_sim@training$y,
 #'                    composite = TRUE, stationary = FALSE, noise = TRUE)
 #' \dontrun{
 #' bcgp_sampling(model, algorithm = "NUTS", scaled = TRUE, chains = 3L,
