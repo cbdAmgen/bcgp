@@ -36,3 +36,5 @@ Suggests:
     mvnfast,
     testthat (>= 2.1.0)
 VignetteBuilder: knitr
+URL: https://github.com/cbdAmgen/bcgp
+BugReports: https://github.com/cbdAmgen/bcgp/issues
