@@ -65,17 +65,18 @@ algorithm.}
 }}
 
 \examples{
-simData <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
-model <- bcgpmodel(x = simData@training$x, y = simData@training$y
+data_sim <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
+model <- bcgpmodel(x = data_sim@training$x, y = data_sim@training$y,
                    composite = TRUE, stationary = FALSE, noise = TRUE)
 \dontrun{
-bcgp_sampling(model, algorithm = "NUTS", scaled = TRUE, chains = 3L,
-              cores = 1L, control = list(adapt_delta = 0.99,
-                                         max_treedepth = 15))
+bcgp_sampling_and_prediction(model, x_pred = data_sim@test$x,
+                             algorithm = "NUTS", scaled = TRUE,
+                             chains = 3L, cores = 1L,
+                             control = list(adapt_delta = 0.99,
+                                            max_treedepth = 15))
 }
 }
 \seealso{
-\code{\link{bcgp_sampling}} \linkS4class{bcgpmodel}
-\linkS4class{bcgpfit} \code{\link[bcgp]{predict}}
-\code{\link[bcgp]{posterior_predict}}
+\code{\link{bcgp_sampling_and_prediction}} \linkS4class{bcgpmodel}
+\linkS4class{bcgpfit}
 }

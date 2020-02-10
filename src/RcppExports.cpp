@@ -8,15 +8,23 @@ using namespace Rcpp;
 
 
 RcppExport SEXP _rcpp_module_boot_stan_fit4stanCompNS_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4stanCompNS_with_pred_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4stanCompS_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4stanCompS_with_pred_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4stanNonCompNS_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4stanNonCompNS_with_pred_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4stanNonCompS_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4stanNonCompS_with_pred_mod();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rcpp_module_boot_stan_fit4stanCompNS_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4stanCompNS_mod, 0},
+    {"_rcpp_module_boot_stan_fit4stanCompNS_with_pred_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4stanCompNS_with_pred_mod, 0},
     {"_rcpp_module_boot_stan_fit4stanCompS_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4stanCompS_mod, 0},
+    {"_rcpp_module_boot_stan_fit4stanCompS_with_pred_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4stanCompS_with_pred_mod, 0},
     {"_rcpp_module_boot_stan_fit4stanNonCompNS_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4stanNonCompNS_mod, 0},
+    {"_rcpp_module_boot_stan_fit4stanNonCompNS_with_pred_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4stanNonCompNS_with_pred_mod, 0},
     {"_rcpp_module_boot_stan_fit4stanNonCompS_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4stanNonCompS_mod, 0},
+    {"_rcpp_module_boot_stan_fit4stanNonCompS_with_pred_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4stanNonCompS_with_pred_mod, 0},
     {NULL, NULL, 0}
 };
 

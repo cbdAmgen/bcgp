@@ -41,3 +41,17 @@ get_sampler_args_stan <- function(x){
        control = attr(x@sim$samples[[1]], "args")$control)
 
 }
+
+check_valid_x_pred_matrix <- function(x_pred, x){
+
+  if(!is.matrix(x_pred)){
+    stop("'x_pred' should be a matrix.")
+  }
+  if(ncol(x_pred) != ncol(x)){
+    stop("'x' and 'x_pred' must have the same number of columns.")
+  }
+  if(any(is.na(x_pred))){
+    stop("'x_pred' should not have any NA values.")
+  }
+
+}

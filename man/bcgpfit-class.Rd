@@ -62,8 +62,8 @@ algorithm.}
 }}
 
 \examples{
-simData <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
-model <- bcgpmodel(x = simData@training$x, y = simData@training$y
+data_sim <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
+model <- bcgpmodel(x = data_sim@training$x, y = data_sim@training$y,
                    composite = TRUE, stationary = FALSE, noise = TRUE)
 \dontrun{
 bcgp_sampling(model, algorithm = "NUTS", scaled = TRUE, chains = 3L,

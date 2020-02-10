@@ -25,8 +25,8 @@ bcgp_sampling(object, ...)
 #' @family preprocessing functions
 #' @seealso \linkS4class{bcgpmodel}
 #' @examples
-#' simData <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
-#' model <- bcgpmodel(x = simData@training$x, y = simData@training$y,
+#' data_sim <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
+#' model <- bcgpmodel(x = data_sim@training$x, y = data_sim@training$y,
 #'                    composite = TRUE, stationary = FALSE, noise = FALSE,
 #'                    scaled = TRUE, chains = 4L)
 #' model@priors$w$lower <- 0.75

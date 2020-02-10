@@ -35,9 +35,9 @@ stan::io::program_reader prog_reader__() {
     reader.add_event(0, 0, "start", "model_stanNonCompS");
     reader.add_event(2, 2, "include", "/functions/common_functions.stan");
     reader.add_event(2, 0, "start", "/functions/common_functions.stan");
-    reader.add_event(119, 117, "end", "/functions/common_functions.stan");
-    reader.add_event(119, 3, "restart", "model_stanNonCompS");
-    reader.add_event(168, 50, "end", "model_stanNonCompS");
+    reader.add_event(369, 367, "end", "/functions/common_functions.stan");
+    reader.add_event(369, 3, "restart", "model_stanNonCompS");
+    reader.add_event(418, 50, "end", "model_stanNonCompS");
     return reader;
 }
 template <typename T0__, typename T1__>
@@ -269,6 +269,638 @@ struct combine_cor_mats_functor__ {
         return combine_cor_mats(w, G, L, pstream__);
     }
 };
+template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__, typename T5__, typename T6__, class RNG>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__>::type>::type, Eigen::Dynamic, 1>
+gp_pred_noncomp_s_rng(const Eigen::Matrix<T0__, Eigen::Dynamic, Eigen::Dynamic>& x,
+                          const Eigen::Matrix<T1__, Eigen::Dynamic, 1>& y,
+                          const Eigen::Matrix<T2__, Eigen::Dynamic, Eigen::Dynamic>& x_pred,
+                          const T3__& beta0,
+                          const Eigen::Matrix<T4__, Eigen::Dynamic, 1>& rho,
+                          const T5__& sigma2eps,
+                          const T6__& sigma2, RNG& base_rng__, std::ostream* pstream__) {
+    typedef typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__>::type>::type local_scalar_t__;
+    typedef local_scalar_t__ fun_return_scalar_t__;
+    const static bool propto__ = true;
+    (void) propto__;
+        local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+    int current_statement_begin__ = -1;
+    try {
+        {
+        current_statement_begin__ = 145;
+        int n_pred(0);
+        (void) n_pred;  // dummy to suppress unused var warning
+        stan::math::fill(n_pred, std::numeric_limits<int>::min());
+        stan::math::assign(n_pred,rows(x_pred));
+        current_statement_begin__ = 146;
+        int n(0);
+        (void) n;  // dummy to suppress unused var warning
+        stan::math::fill(n, std::numeric_limits<int>::min());
+        stan::math::assign(n,rows(x));
+        current_statement_begin__ = 147;
+        int d(0);
+        (void) d;  // dummy to suppress unused var warning
+        stan::math::fill(d, std::numeric_limits<int>::min());
+        stan::math::assign(d,cols(x));
+        current_statement_begin__ = 149;
+        validate_non_negative_index("y_pred", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_pred(n_pred);
+        stan::math::initialize(y_pred, DUMMY_VAR__);
+        stan::math::fill(y_pred, DUMMY_VAR__);
+        {
+        current_statement_begin__ = 152;
+        validate_non_negative_index("y_pred_mean", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_pred_mean(n_pred);
+        stan::math::initialize(y_pred_mean, DUMMY_VAR__);
+        stan::math::fill(y_pred_mean, DUMMY_VAR__);
+        current_statement_begin__ = 153;
+        validate_non_negative_index("y_pred_var_chol", "n_pred", n_pred);
+        validate_non_negative_index("y_pred_var_chol", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> y_pred_var_chol(n_pred, n_pred);
+        stan::math::initialize(y_pred_var_chol, DUMMY_VAR__);
+        stan::math::fill(y_pred_var_chol, DUMMY_VAR__);
+        current_statement_begin__ = 155;
+        int n_all(0);
+        (void) n_all;  // dummy to suppress unused var warning
+        stan::math::fill(n_all, std::numeric_limits<int>::min());
+        stan::math::assign(n_all,(n_pred + n));
+        current_statement_begin__ = 156;
+        validate_non_negative_index("x_all", "n_all", n_all);
+        validate_non_negative_index("x_all", "d", d);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> x_all(n_all, d);
+        stan::math::initialize(x_all, DUMMY_VAR__);
+        stan::math::fill(x_all, DUMMY_VAR__);
+        stan::math::assign(x_all,append_row(x_pred, x));
+        current_statement_begin__ = 157;
+        validate_non_negative_index("R_all", "n_all", n_all);
+        validate_non_negative_index("R_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> R_all(n_all, n_all);
+        stan::math::initialize(R_all, DUMMY_VAR__);
+        stan::math::fill(R_all, DUMMY_VAR__);
+        stan::math::assign(R_all,get_cor_mat(x_all, rho, pstream__));
+        current_statement_begin__ = 158;
+        validate_non_negative_index("C_all", "n_all", n_all);
+        validate_non_negative_index("C_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_all(n_all, n_all);
+        stan::math::initialize(C_all, DUMMY_VAR__);
+        stan::math::fill(C_all, DUMMY_VAR__);
+        stan::math::assign(C_all,get_cov_mat_s(sigma2, R_all, sigma2eps, pstream__));
+        current_statement_begin__ = 159;
+        validate_non_negative_index("C_pred", "n_pred", n_pred);
+        validate_non_negative_index("C_pred", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_pred(n_pred, n_pred);
+        stan::math::initialize(C_pred, DUMMY_VAR__);
+        stan::math::fill(C_pred, DUMMY_VAR__);
+        stan::math::assign(C_pred,stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::nil_index_list())), "C_all"));
+        current_statement_begin__ = 160;
+        validate_non_negative_index("C_L", "n", n);
+        validate_non_negative_index("C_L", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_L(n, n);
+        stan::math::initialize(C_L, DUMMY_VAR__);
+        stan::math::fill(C_L, DUMMY_VAR__);
+        stan::math::assign(C_L,cholesky_decompose(stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::nil_index_list())), "C_all")));
+        current_statement_begin__ = 161;
+        validate_non_negative_index("C_cross", "n", n);
+        validate_non_negative_index("C_cross", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_cross(n, n_pred);
+        stan::math::initialize(C_cross, DUMMY_VAR__);
+        stan::math::fill(C_cross, DUMMY_VAR__);
+        stan::math::assign(C_cross,stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::nil_index_list())), "C_all"));
+        current_statement_begin__ = 163;
+        validate_non_negative_index("y_minus_beta0", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_minus_beta0(n);
+        stan::math::initialize(y_minus_beta0, DUMMY_VAR__);
+        stan::math::fill(y_minus_beta0, DUMMY_VAR__);
+        stan::math::assign(y_minus_beta0,subtract(y, beta0));
+        current_statement_begin__ = 164;
+        validate_non_negative_index("C_L_inv_y_minus_beta0", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> C_L_inv_y_minus_beta0(n);
+        stan::math::initialize(C_L_inv_y_minus_beta0, DUMMY_VAR__);
+        stan::math::fill(C_L_inv_y_minus_beta0, DUMMY_VAR__);
+        stan::math::assign(C_L_inv_y_minus_beta0,mdivide_left_tri_low(C_L, y_minus_beta0));
+        current_statement_begin__ = 165;
+        validate_non_negative_index("C_L_inv_C_cross", "n", n);
+        validate_non_negative_index("C_L_inv_C_cross", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_L_inv_C_cross(n, n_pred);
+        stan::math::initialize(C_L_inv_C_cross, DUMMY_VAR__);
+        stan::math::fill(C_L_inv_C_cross, DUMMY_VAR__);
+        stan::math::assign(C_L_inv_C_cross,mdivide_left_tri_low(C_L, C_cross));
+        current_statement_begin__ = 167;
+        stan::math::assign(y_pred_mean, add(beta0, multiply(transpose(C_L_inv_C_cross), C_L_inv_y_minus_beta0)));
+        current_statement_begin__ = 168;
+        stan::math::assign(y_pred_var_chol, cholesky_decompose(subtract(C_pred, multiply(transpose(C_L_inv_C_cross), C_L_inv_C_cross))));
+        current_statement_begin__ = 171;
+        stan::math::assign(y_pred, multi_normal_cholesky_rng(y_pred_mean, y_pred_var_chol, base_rng__));
+        }
+        current_statement_begin__ = 173;
+        return stan::math::promote_scalar<fun_return_scalar_t__>(y_pred);
+        }
+    } catch (const std::exception& e) {
+        stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+        // Next line prevents compiler griping about no return
+        throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+    }
+}
+struct gp_pred_noncomp_s_rng_functor__ {
+    template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__, typename T5__, typename T6__, class RNG>
+        Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__>::type>::type, Eigen::Dynamic, 1>
+    operator()(const Eigen::Matrix<T0__, Eigen::Dynamic, Eigen::Dynamic>& x,
+                          const Eigen::Matrix<T1__, Eigen::Dynamic, 1>& y,
+                          const Eigen::Matrix<T2__, Eigen::Dynamic, Eigen::Dynamic>& x_pred,
+                          const T3__& beta0,
+                          const Eigen::Matrix<T4__, Eigen::Dynamic, 1>& rho,
+                          const T5__& sigma2eps,
+                          const T6__& sigma2, RNG& base_rng__, std::ostream* pstream__) const {
+        return gp_pred_noncomp_s_rng(x, y, x_pred, beta0, rho, sigma2eps, sigma2, base_rng__, pstream__);
+    }
+};
+template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, class RNG>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__, T7__, typename boost::math::tools::promote_args<T8__, T9__>::type>::type>::type, Eigen::Dynamic, 1>
+gp_pred_comp_ns_rng(const Eigen::Matrix<T0__, Eigen::Dynamic, Eigen::Dynamic>& x,
+                        const Eigen::Matrix<T1__, Eigen::Dynamic, 1>& y,
+                        const Eigen::Matrix<T2__, Eigen::Dynamic, Eigen::Dynamic>& x_pred,
+                        const T3__& beta0,
+                        const T4__& w,
+                        const Eigen::Matrix<T5__, Eigen::Dynamic, 1>& rhoL,
+                        const Eigen::Matrix<T6__, Eigen::Dynamic, 1>& rhoG,
+                        const T7__& sigma2eps,
+                        const Eigen::Matrix<T8__, Eigen::Dynamic, 1>& V,
+                        const Eigen::Matrix<T9__, Eigen::Dynamic, 1>& V_pred, RNG& base_rng__, std::ostream* pstream__) {
+    typedef typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__, T7__, typename boost::math::tools::promote_args<T8__, T9__>::type>::type>::type local_scalar_t__;
+    typedef local_scalar_t__ fun_return_scalar_t__;
+    const static bool propto__ = true;
+    (void) propto__;
+        local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+    int current_statement_begin__ = -1;
+    try {
+        {
+        current_statement_begin__ = 206;
+        int n_pred(0);
+        (void) n_pred;  // dummy to suppress unused var warning
+        stan::math::fill(n_pred, std::numeric_limits<int>::min());
+        stan::math::assign(n_pred,rows(x_pred));
+        current_statement_begin__ = 207;
+        int n(0);
+        (void) n;  // dummy to suppress unused var warning
+        stan::math::fill(n, std::numeric_limits<int>::min());
+        stan::math::assign(n,rows(x));
+        current_statement_begin__ = 208;
+        int d(0);
+        (void) d;  // dummy to suppress unused var warning
+        stan::math::fill(d, std::numeric_limits<int>::min());
+        stan::math::assign(d,cols(x));
+        current_statement_begin__ = 210;
+        validate_non_negative_index("y_pred", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_pred(n_pred);
+        stan::math::initialize(y_pred, DUMMY_VAR__);
+        stan::math::fill(y_pred, DUMMY_VAR__);
+        {
+        current_statement_begin__ = 213;
+        validate_non_negative_index("y_pred_mean", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_pred_mean(n_pred);
+        stan::math::initialize(y_pred_mean, DUMMY_VAR__);
+        stan::math::fill(y_pred_mean, DUMMY_VAR__);
+        current_statement_begin__ = 214;
+        validate_non_negative_index("y_pred_var_chol", "n_pred", n_pred);
+        validate_non_negative_index("y_pred_var_chol", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> y_pred_var_chol(n_pred, n_pred);
+        stan::math::initialize(y_pred_var_chol, DUMMY_VAR__);
+        stan::math::fill(y_pred_var_chol, DUMMY_VAR__);
+        current_statement_begin__ = 216;
+        int n_all(0);
+        (void) n_all;  // dummy to suppress unused var warning
+        stan::math::fill(n_all, std::numeric_limits<int>::min());
+        stan::math::assign(n_all,(n_pred + n));
+        current_statement_begin__ = 217;
+        validate_non_negative_index("x_all", "n_all", n_all);
+        validate_non_negative_index("x_all", "d", d);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> x_all(n_all, d);
+        stan::math::initialize(x_all, DUMMY_VAR__);
+        stan::math::fill(x_all, DUMMY_VAR__);
+        stan::math::assign(x_all,append_row(x_pred, x));
+        current_statement_begin__ = 219;
+        validate_non_negative_index("G_all", "n_all", n_all);
+        validate_non_negative_index("G_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> G_all(n_all, n_all);
+        stan::math::initialize(G_all, DUMMY_VAR__);
+        stan::math::fill(G_all, DUMMY_VAR__);
+        stan::math::assign(G_all,get_cor_mat(x_all, rhoG, pstream__));
+        current_statement_begin__ = 220;
+        validate_non_negative_index("L_all", "n_all", n_all);
+        validate_non_negative_index("L_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> L_all(n_all, n_all);
+        stan::math::initialize(L_all, DUMMY_VAR__);
+        stan::math::fill(L_all, DUMMY_VAR__);
+        stan::math::assign(L_all,get_cor_mat(x_all, rhoL, pstream__));
+        current_statement_begin__ = 221;
+        validate_non_negative_index("R_all", "n_all", n_all);
+        validate_non_negative_index("R_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> R_all(n_all, n_all);
+        stan::math::initialize(R_all, DUMMY_VAR__);
+        stan::math::fill(R_all, DUMMY_VAR__);
+        stan::math::assign(R_all,combine_cor_mats(w, G_all, L_all, pstream__));
+        current_statement_begin__ = 222;
+        validate_non_negative_index("V_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> V_all(n_all);
+        stan::math::initialize(V_all, DUMMY_VAR__);
+        stan::math::fill(V_all, DUMMY_VAR__);
+        stan::math::assign(V_all,append_row(V_pred, V));
+        current_statement_begin__ = 223;
+        validate_non_negative_index("C_all", "n_all", n_all);
+        validate_non_negative_index("C_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_all(n_all, n_all);
+        stan::math::initialize(C_all, DUMMY_VAR__);
+        stan::math::fill(C_all, DUMMY_VAR__);
+        stan::math::assign(C_all,get_cov_mat_ns(V_all, R_all, sigma2eps, pstream__));
+        current_statement_begin__ = 225;
+        validate_non_negative_index("C_pred", "n_pred", n_pred);
+        validate_non_negative_index("C_pred", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_pred(n_pred, n_pred);
+        stan::math::initialize(C_pred, DUMMY_VAR__);
+        stan::math::fill(C_pred, DUMMY_VAR__);
+        stan::math::assign(C_pred,stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::nil_index_list())), "C_all"));
+        current_statement_begin__ = 226;
+        validate_non_negative_index("C_L", "n", n);
+        validate_non_negative_index("C_L", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_L(n, n);
+        stan::math::initialize(C_L, DUMMY_VAR__);
+        stan::math::fill(C_L, DUMMY_VAR__);
+        stan::math::assign(C_L,cholesky_decompose(stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::nil_index_list())), "C_all")));
+        current_statement_begin__ = 227;
+        validate_non_negative_index("C_cross", "n", n);
+        validate_non_negative_index("C_cross", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_cross(n, n_pred);
+        stan::math::initialize(C_cross, DUMMY_VAR__);
+        stan::math::fill(C_cross, DUMMY_VAR__);
+        stan::math::assign(C_cross,stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::nil_index_list())), "C_all"));
+        current_statement_begin__ = 229;
+        validate_non_negative_index("y_minus_beta0", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_minus_beta0(n);
+        stan::math::initialize(y_minus_beta0, DUMMY_VAR__);
+        stan::math::fill(y_minus_beta0, DUMMY_VAR__);
+        stan::math::assign(y_minus_beta0,subtract(y, beta0));
+        current_statement_begin__ = 230;
+        validate_non_negative_index("C_L_inv_y_minus_beta0", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> C_L_inv_y_minus_beta0(n);
+        stan::math::initialize(C_L_inv_y_minus_beta0, DUMMY_VAR__);
+        stan::math::fill(C_L_inv_y_minus_beta0, DUMMY_VAR__);
+        stan::math::assign(C_L_inv_y_minus_beta0,mdivide_left_tri_low(C_L, y_minus_beta0));
+        current_statement_begin__ = 231;
+        validate_non_negative_index("C_L_inv_C_cross", "n", n);
+        validate_non_negative_index("C_L_inv_C_cross", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_L_inv_C_cross(n, n_pred);
+        stan::math::initialize(C_L_inv_C_cross, DUMMY_VAR__);
+        stan::math::fill(C_L_inv_C_cross, DUMMY_VAR__);
+        stan::math::assign(C_L_inv_C_cross,mdivide_left_tri_low(C_L, C_cross));
+        current_statement_begin__ = 233;
+        stan::math::assign(y_pred_mean, add(beta0, multiply(transpose(C_L_inv_C_cross), C_L_inv_y_minus_beta0)));
+        current_statement_begin__ = 234;
+        stan::math::assign(y_pred_var_chol, cholesky_decompose(subtract(C_pred, multiply(transpose(C_L_inv_C_cross), C_L_inv_C_cross))));
+        current_statement_begin__ = 237;
+        stan::math::assign(y_pred, multi_normal_cholesky_rng(y_pred_mean, y_pred_var_chol, base_rng__));
+        }
+        current_statement_begin__ = 240;
+        return stan::math::promote_scalar<fun_return_scalar_t__>(y_pred);
+        }
+    } catch (const std::exception& e) {
+        stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+        // Next line prevents compiler griping about no return
+        throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+    }
+}
+struct gp_pred_comp_ns_rng_functor__ {
+    template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, typename T9__, class RNG>
+        Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__, T7__, typename boost::math::tools::promote_args<T8__, T9__>::type>::type>::type, Eigen::Dynamic, 1>
+    operator()(const Eigen::Matrix<T0__, Eigen::Dynamic, Eigen::Dynamic>& x,
+                        const Eigen::Matrix<T1__, Eigen::Dynamic, 1>& y,
+                        const Eigen::Matrix<T2__, Eigen::Dynamic, Eigen::Dynamic>& x_pred,
+                        const T3__& beta0,
+                        const T4__& w,
+                        const Eigen::Matrix<T5__, Eigen::Dynamic, 1>& rhoL,
+                        const Eigen::Matrix<T6__, Eigen::Dynamic, 1>& rhoG,
+                        const T7__& sigma2eps,
+                        const Eigen::Matrix<T8__, Eigen::Dynamic, 1>& V,
+                        const Eigen::Matrix<T9__, Eigen::Dynamic, 1>& V_pred, RNG& base_rng__, std::ostream* pstream__) const {
+        return gp_pred_comp_ns_rng(x, y, x_pred, beta0, w, rhoL, rhoG, sigma2eps, V, V_pred, base_rng__, pstream__);
+    }
+};
+template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, class RNG>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__, T7__>::type>::type, Eigen::Dynamic, 1>
+gp_pred_noncomp_ns_rng(const Eigen::Matrix<T0__, Eigen::Dynamic, Eigen::Dynamic>& x,
+                           const Eigen::Matrix<T1__, Eigen::Dynamic, 1>& y,
+                           const Eigen::Matrix<T2__, Eigen::Dynamic, Eigen::Dynamic>& x_pred,
+                           const T3__& beta0,
+                           const Eigen::Matrix<T4__, Eigen::Dynamic, 1>& rho,
+                           const T5__& sigma2eps,
+                           const Eigen::Matrix<T6__, Eigen::Dynamic, 1>& V,
+                           const Eigen::Matrix<T7__, Eigen::Dynamic, 1>& V_pred, RNG& base_rng__, std::ostream* pstream__) {
+    typedef typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__, T7__>::type>::type local_scalar_t__;
+    typedef local_scalar_t__ fun_return_scalar_t__;
+    const static bool propto__ = true;
+    (void) propto__;
+        local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+    int current_statement_begin__ = -1;
+    try {
+        {
+        current_statement_begin__ = 271;
+        int n_pred(0);
+        (void) n_pred;  // dummy to suppress unused var warning
+        stan::math::fill(n_pred, std::numeric_limits<int>::min());
+        stan::math::assign(n_pred,rows(x_pred));
+        current_statement_begin__ = 272;
+        int n(0);
+        (void) n;  // dummy to suppress unused var warning
+        stan::math::fill(n, std::numeric_limits<int>::min());
+        stan::math::assign(n,rows(x));
+        current_statement_begin__ = 273;
+        int d(0);
+        (void) d;  // dummy to suppress unused var warning
+        stan::math::fill(d, std::numeric_limits<int>::min());
+        stan::math::assign(d,cols(x));
+        current_statement_begin__ = 275;
+        validate_non_negative_index("y_pred", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_pred(n_pred);
+        stan::math::initialize(y_pred, DUMMY_VAR__);
+        stan::math::fill(y_pred, DUMMY_VAR__);
+        {
+        current_statement_begin__ = 278;
+        validate_non_negative_index("y_pred_mean", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_pred_mean(n_pred);
+        stan::math::initialize(y_pred_mean, DUMMY_VAR__);
+        stan::math::fill(y_pred_mean, DUMMY_VAR__);
+        current_statement_begin__ = 279;
+        validate_non_negative_index("y_pred_var_chol", "n_pred", n_pred);
+        validate_non_negative_index("y_pred_var_chol", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> y_pred_var_chol(n_pred, n_pred);
+        stan::math::initialize(y_pred_var_chol, DUMMY_VAR__);
+        stan::math::fill(y_pred_var_chol, DUMMY_VAR__);
+        current_statement_begin__ = 281;
+        int n_all(0);
+        (void) n_all;  // dummy to suppress unused var warning
+        stan::math::fill(n_all, std::numeric_limits<int>::min());
+        stan::math::assign(n_all,(n_pred + n));
+        current_statement_begin__ = 282;
+        validate_non_negative_index("x_all", "n_all", n_all);
+        validate_non_negative_index("x_all", "d", d);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> x_all(n_all, d);
+        stan::math::initialize(x_all, DUMMY_VAR__);
+        stan::math::fill(x_all, DUMMY_VAR__);
+        stan::math::assign(x_all,append_row(x_pred, x));
+        current_statement_begin__ = 284;
+        validate_non_negative_index("R_all", "n_all", n_all);
+        validate_non_negative_index("R_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> R_all(n_all, n_all);
+        stan::math::initialize(R_all, DUMMY_VAR__);
+        stan::math::fill(R_all, DUMMY_VAR__);
+        stan::math::assign(R_all,get_cor_mat(x_all, rho, pstream__));
+        current_statement_begin__ = 285;
+        validate_non_negative_index("V_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> V_all(n_all);
+        stan::math::initialize(V_all, DUMMY_VAR__);
+        stan::math::fill(V_all, DUMMY_VAR__);
+        stan::math::assign(V_all,append_row(V_pred, V));
+        current_statement_begin__ = 286;
+        validate_non_negative_index("C_all", "n_all", n_all);
+        validate_non_negative_index("C_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_all(n_all, n_all);
+        stan::math::initialize(C_all, DUMMY_VAR__);
+        stan::math::fill(C_all, DUMMY_VAR__);
+        stan::math::assign(C_all,get_cov_mat_ns(V_all, R_all, sigma2eps, pstream__));
+        current_statement_begin__ = 288;
+        validate_non_negative_index("C_pred", "n_pred", n_pred);
+        validate_non_negative_index("C_pred", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_pred(n_pred, n_pred);
+        stan::math::initialize(C_pred, DUMMY_VAR__);
+        stan::math::fill(C_pred, DUMMY_VAR__);
+        stan::math::assign(C_pred,stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::nil_index_list())), "C_all"));
+        current_statement_begin__ = 289;
+        validate_non_negative_index("C_L", "n", n);
+        validate_non_negative_index("C_L", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_L(n, n);
+        stan::math::initialize(C_L, DUMMY_VAR__);
+        stan::math::fill(C_L, DUMMY_VAR__);
+        stan::math::assign(C_L,cholesky_decompose(stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::nil_index_list())), "C_all")));
+        current_statement_begin__ = 290;
+        validate_non_negative_index("C_cross", "n", n);
+        validate_non_negative_index("C_cross", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_cross(n, n_pred);
+        stan::math::initialize(C_cross, DUMMY_VAR__);
+        stan::math::fill(C_cross, DUMMY_VAR__);
+        stan::math::assign(C_cross,stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::nil_index_list())), "C_all"));
+        current_statement_begin__ = 292;
+        validate_non_negative_index("y_minus_beta0", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_minus_beta0(n);
+        stan::math::initialize(y_minus_beta0, DUMMY_VAR__);
+        stan::math::fill(y_minus_beta0, DUMMY_VAR__);
+        stan::math::assign(y_minus_beta0,subtract(y, beta0));
+        current_statement_begin__ = 293;
+        validate_non_negative_index("C_L_inv_y_minus_beta0", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> C_L_inv_y_minus_beta0(n);
+        stan::math::initialize(C_L_inv_y_minus_beta0, DUMMY_VAR__);
+        stan::math::fill(C_L_inv_y_minus_beta0, DUMMY_VAR__);
+        stan::math::assign(C_L_inv_y_minus_beta0,mdivide_left_tri_low(C_L, y_minus_beta0));
+        current_statement_begin__ = 294;
+        validate_non_negative_index("C_L_inv_C_cross", "n", n);
+        validate_non_negative_index("C_L_inv_C_cross", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_L_inv_C_cross(n, n_pred);
+        stan::math::initialize(C_L_inv_C_cross, DUMMY_VAR__);
+        stan::math::fill(C_L_inv_C_cross, DUMMY_VAR__);
+        stan::math::assign(C_L_inv_C_cross,mdivide_left_tri_low(C_L, C_cross));
+        current_statement_begin__ = 296;
+        stan::math::assign(y_pred_mean, add(beta0, multiply(transpose(C_L_inv_C_cross), C_L_inv_y_minus_beta0)));
+        current_statement_begin__ = 297;
+        stan::math::assign(y_pred_var_chol, cholesky_decompose(subtract(C_pred, multiply(transpose(C_L_inv_C_cross), C_L_inv_C_cross))));
+        current_statement_begin__ = 300;
+        stan::math::assign(y_pred, multi_normal_cholesky_rng(y_pred_mean, y_pred_var_chol, base_rng__));
+        }
+        current_statement_begin__ = 303;
+        return stan::math::promote_scalar<fun_return_scalar_t__>(y_pred);
+        }
+    } catch (const std::exception& e) {
+        stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+        // Next line prevents compiler griping about no return
+        throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+    }
+}
+struct gp_pred_noncomp_ns_rng_functor__ {
+    template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, class RNG>
+        Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__, T7__>::type>::type, Eigen::Dynamic, 1>
+    operator()(const Eigen::Matrix<T0__, Eigen::Dynamic, Eigen::Dynamic>& x,
+                           const Eigen::Matrix<T1__, Eigen::Dynamic, 1>& y,
+                           const Eigen::Matrix<T2__, Eigen::Dynamic, Eigen::Dynamic>& x_pred,
+                           const T3__& beta0,
+                           const Eigen::Matrix<T4__, Eigen::Dynamic, 1>& rho,
+                           const T5__& sigma2eps,
+                           const Eigen::Matrix<T6__, Eigen::Dynamic, 1>& V,
+                           const Eigen::Matrix<T7__, Eigen::Dynamic, 1>& V_pred, RNG& base_rng__, std::ostream* pstream__) const {
+        return gp_pred_noncomp_ns_rng(x, y, x_pred, beta0, rho, sigma2eps, V, V_pred, base_rng__, pstream__);
+    }
+};
+template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, class RNG>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__, T7__, typename boost::math::tools::promote_args<T8__>::type>::type>::type, Eigen::Dynamic, 1>
+gp_pred_comp_s_rng(const Eigen::Matrix<T0__, Eigen::Dynamic, Eigen::Dynamic>& x,
+                       const Eigen::Matrix<T1__, Eigen::Dynamic, 1>& y,
+                       const Eigen::Matrix<T2__, Eigen::Dynamic, Eigen::Dynamic>& x_pred,
+                       const T3__& beta0,
+                       const T4__& w,
+                       const Eigen::Matrix<T5__, Eigen::Dynamic, 1>& rhoL,
+                       const Eigen::Matrix<T6__, Eigen::Dynamic, 1>& rhoG,
+                       const T7__& sigma2eps,
+                       const T8__& sigma2, RNG& base_rng__, std::ostream* pstream__) {
+    typedef typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__, T7__, typename boost::math::tools::promote_args<T8__>::type>::type>::type local_scalar_t__;
+    typedef local_scalar_t__ fun_return_scalar_t__;
+    const static bool propto__ = true;
+    (void) propto__;
+        local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+    int current_statement_begin__ = -1;
+    try {
+        {
+        current_statement_begin__ = 338;
+        int n_pred(0);
+        (void) n_pred;  // dummy to suppress unused var warning
+        stan::math::fill(n_pred, std::numeric_limits<int>::min());
+        stan::math::assign(n_pred,rows(x_pred));
+        current_statement_begin__ = 339;
+        int n(0);
+        (void) n;  // dummy to suppress unused var warning
+        stan::math::fill(n, std::numeric_limits<int>::min());
+        stan::math::assign(n,rows(x));
+        current_statement_begin__ = 340;
+        int d(0);
+        (void) d;  // dummy to suppress unused var warning
+        stan::math::fill(d, std::numeric_limits<int>::min());
+        stan::math::assign(d,cols(x));
+        current_statement_begin__ = 342;
+        validate_non_negative_index("y_pred", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_pred(n_pred);
+        stan::math::initialize(y_pred, DUMMY_VAR__);
+        stan::math::fill(y_pred, DUMMY_VAR__);
+        {
+        current_statement_begin__ = 345;
+        validate_non_negative_index("y_pred_mean", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_pred_mean(n_pred);
+        stan::math::initialize(y_pred_mean, DUMMY_VAR__);
+        stan::math::fill(y_pred_mean, DUMMY_VAR__);
+        current_statement_begin__ = 346;
+        validate_non_negative_index("y_pred_var_chol", "n_pred", n_pred);
+        validate_non_negative_index("y_pred_var_chol", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> y_pred_var_chol(n_pred, n_pred);
+        stan::math::initialize(y_pred_var_chol, DUMMY_VAR__);
+        stan::math::fill(y_pred_var_chol, DUMMY_VAR__);
+        current_statement_begin__ = 348;
+        int n_all(0);
+        (void) n_all;  // dummy to suppress unused var warning
+        stan::math::fill(n_all, std::numeric_limits<int>::min());
+        stan::math::assign(n_all,(n_pred + n));
+        current_statement_begin__ = 349;
+        validate_non_negative_index("x_all", "n_all", n_all);
+        validate_non_negative_index("x_all", "d", d);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> x_all(n_all, d);
+        stan::math::initialize(x_all, DUMMY_VAR__);
+        stan::math::fill(x_all, DUMMY_VAR__);
+        stan::math::assign(x_all,append_row(x_pred, x));
+        current_statement_begin__ = 350;
+        validate_non_negative_index("G_all", "n_all", n_all);
+        validate_non_negative_index("G_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> G_all(n_all, n_all);
+        stan::math::initialize(G_all, DUMMY_VAR__);
+        stan::math::fill(G_all, DUMMY_VAR__);
+        stan::math::assign(G_all,get_cor_mat(x_all, rhoG, pstream__));
+        current_statement_begin__ = 351;
+        validate_non_negative_index("L_all", "n_all", n_all);
+        validate_non_negative_index("L_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> L_all(n_all, n_all);
+        stan::math::initialize(L_all, DUMMY_VAR__);
+        stan::math::fill(L_all, DUMMY_VAR__);
+        stan::math::assign(L_all,get_cor_mat(x_all, rhoL, pstream__));
+        current_statement_begin__ = 352;
+        validate_non_negative_index("R_all", "n_all", n_all);
+        validate_non_negative_index("R_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> R_all(n_all, n_all);
+        stan::math::initialize(R_all, DUMMY_VAR__);
+        stan::math::fill(R_all, DUMMY_VAR__);
+        stan::math::assign(R_all,combine_cor_mats(w, G_all, L_all, pstream__));
+        current_statement_begin__ = 353;
+        validate_non_negative_index("C_all", "n_all", n_all);
+        validate_non_negative_index("C_all", "n_all", n_all);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_all(n_all, n_all);
+        stan::math::initialize(C_all, DUMMY_VAR__);
+        stan::math::fill(C_all, DUMMY_VAR__);
+        stan::math::assign(C_all,get_cov_mat_s(sigma2, R_all, sigma2eps, pstream__));
+        current_statement_begin__ = 354;
+        validate_non_negative_index("C_pred", "n_pred", n_pred);
+        validate_non_negative_index("C_pred", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_pred(n_pred, n_pred);
+        stan::math::initialize(C_pred, DUMMY_VAR__);
+        stan::math::fill(C_pred, DUMMY_VAR__);
+        stan::math::assign(C_pred,stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::nil_index_list())), "C_all"));
+        current_statement_begin__ = 355;
+        validate_non_negative_index("C_L", "n", n);
+        validate_non_negative_index("C_L", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_L(n, n);
+        stan::math::initialize(C_L, DUMMY_VAR__);
+        stan::math::fill(C_L, DUMMY_VAR__);
+        stan::math::assign(C_L,cholesky_decompose(stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::nil_index_list())), "C_all")));
+        current_statement_begin__ = 356;
+        validate_non_negative_index("C_cross", "n", n);
+        validate_non_negative_index("C_cross", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_cross(n, n_pred);
+        stan::math::initialize(C_cross, DUMMY_VAR__);
+        stan::math::fill(C_cross, DUMMY_VAR__);
+        stan::math::assign(C_cross,stan::model::rvalue(C_all, stan::model::cons_list(stan::model::index_min((n_pred + 1)), stan::model::cons_list(stan::model::index_min_max(1, n_pred), stan::model::nil_index_list())), "C_all"));
+        current_statement_begin__ = 358;
+        validate_non_negative_index("y_minus_beta0", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> y_minus_beta0(n);
+        stan::math::initialize(y_minus_beta0, DUMMY_VAR__);
+        stan::math::fill(y_minus_beta0, DUMMY_VAR__);
+        stan::math::assign(y_minus_beta0,subtract(y, beta0));
+        current_statement_begin__ = 359;
+        validate_non_negative_index("C_L_inv_y_minus_beta0", "n", n);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> C_L_inv_y_minus_beta0(n);
+        stan::math::initialize(C_L_inv_y_minus_beta0, DUMMY_VAR__);
+        stan::math::fill(C_L_inv_y_minus_beta0, DUMMY_VAR__);
+        stan::math::assign(C_L_inv_y_minus_beta0,mdivide_left_tri_low(C_L, y_minus_beta0));
+        current_statement_begin__ = 360;
+        validate_non_negative_index("C_L_inv_C_cross", "n", n);
+        validate_non_negative_index("C_L_inv_C_cross", "n_pred", n_pred);
+        Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_L_inv_C_cross(n, n_pred);
+        stan::math::initialize(C_L_inv_C_cross, DUMMY_VAR__);
+        stan::math::fill(C_L_inv_C_cross, DUMMY_VAR__);
+        stan::math::assign(C_L_inv_C_cross,mdivide_left_tri_low(C_L, C_cross));
+        current_statement_begin__ = 362;
+        stan::math::assign(y_pred_mean, add(beta0, multiply(transpose(C_L_inv_C_cross), C_L_inv_y_minus_beta0)));
+        current_statement_begin__ = 363;
+        stan::math::assign(y_pred_var_chol, cholesky_decompose(subtract(C_pred, multiply(transpose(C_L_inv_C_cross), C_L_inv_C_cross))));
+        current_statement_begin__ = 366;
+        stan::math::assign(y_pred, multi_normal_cholesky_rng(y_pred_mean, y_pred_var_chol, base_rng__));
+        }
+        current_statement_begin__ = 368;
+        return stan::math::promote_scalar<fun_return_scalar_t__>(y_pred);
+        }
+    } catch (const std::exception& e) {
+        stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+        // Next line prevents compiler griping about no return
+        throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+    }
+}
+struct gp_pred_comp_s_rng_functor__ {
+    template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__, typename T5__, typename T6__, typename T7__, typename T8__, class RNG>
+        Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__, T5__, T6__, T7__, typename boost::math::tools::promote_args<T8__>::type>::type>::type, Eigen::Dynamic, 1>
+    operator()(const Eigen::Matrix<T0__, Eigen::Dynamic, Eigen::Dynamic>& x,
+                       const Eigen::Matrix<T1__, Eigen::Dynamic, 1>& y,
+                       const Eigen::Matrix<T2__, Eigen::Dynamic, Eigen::Dynamic>& x_pred,
+                       const T3__& beta0,
+                       const T4__& w,
+                       const Eigen::Matrix<T5__, Eigen::Dynamic, 1>& rhoL,
+                       const Eigen::Matrix<T6__, Eigen::Dynamic, 1>& rhoG,
+                       const T7__& sigma2eps,
+                       const T8__& sigma2, RNG& base_rng__, std::ostream* pstream__) const {
+        return gp_pred_comp_s_rng(x, y, x_pred, beta0, w, rhoL, rhoG, sigma2eps, sigma2, base_rng__, pstream__);
+    }
+};
 #include <stan_meta_header.hpp>
 class model_stanNonCompS : public prob_grad {
 private:
@@ -312,21 +944,21 @@ public:
         (void) DUMMY_VAR__;  // suppress unused var warning
         try {
             // initialize data block variables from context__
-            current_statement_begin__ = 124;
+            current_statement_begin__ = 374;
             context__.validate_dims("data initialization", "n", "int", context__.to_vec());
             n = int(0);
             vals_i__ = context__.vals_i("n");
             pos__ = 0;
             n = vals_i__[pos__++];
             check_greater_or_equal(function__, "n", n, 1);
-            current_statement_begin__ = 125;
+            current_statement_begin__ = 375;
             context__.validate_dims("data initialization", "d", "int", context__.to_vec());
             d = int(0);
             vals_i__ = context__.vals_i("d");
             pos__ = 0;
             d = vals_i__[pos__++];
             check_greater_or_equal(function__, "d", d, 1);
-            current_statement_begin__ = 126;
+            current_statement_begin__ = 376;
             validate_non_negative_index("y", "n", n);
             context__.validate_dims("data initialization", "y", "vector_d", context__.to_vec(n));
             y = Eigen::Matrix<double, Eigen::Dynamic, 1>(n);
@@ -336,7 +968,7 @@ public:
             for (size_t j_1__ = 0; j_1__ < y_j_1_max__; ++j_1__) {
                 y(j_1__) = vals_r__[pos__++];
             }
-            current_statement_begin__ = 127;
+            current_statement_begin__ = 377;
             validate_non_negative_index("x", "n", n);
             validate_non_negative_index("x", "d", d);
             context__.validate_dims("data initialization", "x", "matrix_d", context__.to_vec(n,d));
@@ -350,7 +982,7 @@ public:
                     x(j_1__, j_2__) = vals_r__[pos__++];
                 }
             }
-            current_statement_begin__ = 129;
+            current_statement_begin__ = 379;
             validate_non_negative_index("rho_alpha", "d", d);
             context__.validate_dims("data initialization", "rho_alpha", "vector_d", context__.to_vec(d));
             rho_alpha = Eigen::Matrix<double, Eigen::Dynamic, 1>(d);
@@ -361,7 +993,7 @@ public:
                 rho_alpha(j_1__) = vals_r__[pos__++];
             }
             check_greater_or_equal(function__, "rho_alpha", rho_alpha, 0);
-            current_statement_begin__ = 130;
+            current_statement_begin__ = 380;
             validate_non_negative_index("rho_beta", "d", d);
             context__.validate_dims("data initialization", "rho_beta", "vector_d", context__.to_vec(d));
             rho_beta = Eigen::Matrix<double, Eigen::Dynamic, 1>(d);
@@ -372,28 +1004,28 @@ public:
                 rho_beta(j_1__) = vals_r__[pos__++];
             }
             check_greater_or_equal(function__, "rho_beta", rho_beta, 0);
-            current_statement_begin__ = 131;
+            current_statement_begin__ = 381;
             context__.validate_dims("data initialization", "sigma2_alpha", "double", context__.to_vec());
             sigma2_alpha = double(0);
             vals_r__ = context__.vals_r("sigma2_alpha");
             pos__ = 0;
             sigma2_alpha = vals_r__[pos__++];
             check_greater_or_equal(function__, "sigma2_alpha", sigma2_alpha, 0);
-            current_statement_begin__ = 132;
+            current_statement_begin__ = 382;
             context__.validate_dims("data initialization", "sigma2_beta", "double", context__.to_vec());
             sigma2_beta = double(0);
             vals_r__ = context__.vals_r("sigma2_beta");
             pos__ = 0;
             sigma2_beta = vals_r__[pos__++];
             check_greater_or_equal(function__, "sigma2_beta", sigma2_beta, 0);
-            current_statement_begin__ = 133;
+            current_statement_begin__ = 383;
             context__.validate_dims("data initialization", "sigma2eps_alpha", "double", context__.to_vec());
             sigma2eps_alpha = double(0);
             vals_r__ = context__.vals_r("sigma2eps_alpha");
             pos__ = 0;
             sigma2eps_alpha = vals_r__[pos__++];
             check_greater_or_equal(function__, "sigma2eps_alpha", sigma2eps_alpha, 0);
-            current_statement_begin__ = 134;
+            current_statement_begin__ = 384;
             context__.validate_dims("data initialization", "sigma2eps_beta", "double", context__.to_vec());
             sigma2eps_beta = double(0);
             vals_r__ = context__.vals_r("sigma2eps_beta");
@@ -406,14 +1038,14 @@ public:
             // validate, set parameter ranges
             num_params_r__ = 0U;
             param_ranges_i__.clear();
-            current_statement_begin__ = 139;
+            current_statement_begin__ = 389;
             num_params_r__ += 1;
-            current_statement_begin__ = 140;
+            current_statement_begin__ = 390;
             validate_non_negative_index("rho", "d", d);
             num_params_r__ += d;
-            current_statement_begin__ = 141;
+            current_statement_begin__ = 391;
             num_params_r__ += 1;
-            current_statement_begin__ = 142;
+            current_statement_begin__ = 392;
             num_params_r__ += 1;
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
@@ -432,7 +1064,7 @@ public:
         (void) pos__; // dummy call to supress warning
         std::vector<double> vals_r__;
         std::vector<int> vals_i__;
-        current_statement_begin__ = 139;
+        current_statement_begin__ = 389;
         if (!(context__.contains_r("beta0")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable beta0 missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("beta0");
@@ -445,7 +1077,7 @@ public:
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(std::runtime_error(std::string("Error transforming variable beta0: ") + e.what()), current_statement_begin__, prog_reader__());
         }
-        current_statement_begin__ = 140;
+        current_statement_begin__ = 390;
         if (!(context__.contains_r("rho")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable rho missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("rho");
@@ -462,7 +1094,7 @@ public:
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(std::runtime_error(std::string("Error transforming variable rho: ") + e.what()), current_statement_begin__, prog_reader__());
         }
-        current_statement_begin__ = 141;
+        current_statement_begin__ = 391;
         if (!(context__.contains_r("sigma2")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable sigma2 missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("sigma2");
@@ -475,7 +1107,7 @@ public:
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(std::runtime_error(std::string("Error transforming variable sigma2: ") + e.what()), current_statement_begin__, prog_reader__());
         }
-        current_statement_begin__ = 142;
+        current_statement_begin__ = 392;
         if (!(context__.contains_r("sigma2eps")))
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable sigma2eps missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("sigma2eps");
@@ -513,28 +1145,28 @@ public:
         try {
             stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
             // model parameters
-            current_statement_begin__ = 139;
+            current_statement_begin__ = 389;
             local_scalar_t__ beta0;
             (void) beta0;  // dummy to suppress unused var warning
             if (jacobian__)
                 beta0 = in__.scalar_constrain(lp__);
             else
                 beta0 = in__.scalar_constrain();
-            current_statement_begin__ = 140;
+            current_statement_begin__ = 390;
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> rho;
             (void) rho;  // dummy to suppress unused var warning
             if (jacobian__)
                 rho = in__.vector_lub_constrain(0, 1, d, lp__);
             else
                 rho = in__.vector_lub_constrain(0, 1, d);
-            current_statement_begin__ = 141;
+            current_statement_begin__ = 391;
             local_scalar_t__ sigma2;
             (void) sigma2;  // dummy to suppress unused var warning
             if (jacobian__)
                 sigma2 = in__.scalar_lb_constrain(0, lp__);
             else
                 sigma2 = in__.scalar_lb_constrain(0);
-            current_statement_begin__ = 142;
+            current_statement_begin__ = 392;
             local_scalar_t__ sigma2eps;
             (void) sigma2eps;  // dummy to suppress unused var warning
             if (jacobian__)
@@ -543,47 +1175,47 @@ public:
                 sigma2eps = in__.scalar_lb_constrain(0);
             // model body
             {
-            current_statement_begin__ = 147;
+            current_statement_begin__ = 397;
             validate_non_negative_index("C_L", "n", n);
             validate_non_negative_index("C_L", "n", n);
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C_L(n, n);
             stan::math::initialize(C_L, DUMMY_VAR__);
             stan::math::fill(C_L, DUMMY_VAR__);
-            current_statement_begin__ = 148;
+            current_statement_begin__ = 398;
             validate_non_negative_index("beta0_vec", "n", n);
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> beta0_vec(n);
             stan::math::initialize(beta0_vec, DUMMY_VAR__);
             stan::math::fill(beta0_vec, DUMMY_VAR__);
             {
-            current_statement_begin__ = 151;
+            current_statement_begin__ = 401;
             validate_non_negative_index("R", "n", n);
             validate_non_negative_index("R", "n", n);
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> R(n, n);
             stan::math::initialize(R, DUMMY_VAR__);
             stan::math::fill(R, DUMMY_VAR__);
             stan::math::assign(R,get_cor_mat(x, rho, pstream__));
-            current_statement_begin__ = 152;
+            current_statement_begin__ = 402;
             validate_non_negative_index("C", "n", n);
             validate_non_negative_index("C", "n", n);
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, Eigen::Dynamic> C(n, n);
             stan::math::initialize(C, DUMMY_VAR__);
             stan::math::fill(C, DUMMY_VAR__);
             stan::math::assign(C,get_cov_mat_s(sigma2, R, sigma2eps, pstream__));
-            current_statement_begin__ = 153;
+            current_statement_begin__ = 403;
             stan::math::assign(C_L, cholesky_decompose(C));
-            current_statement_begin__ = 154;
+            current_statement_begin__ = 404;
             stan::math::assign(beta0_vec, rep_vector(beta0, n));
             }
-            current_statement_begin__ = 159;
+            current_statement_begin__ = 409;
             for (int i = 1; i <= d; ++i) {
-                current_statement_begin__ = 160;
+                current_statement_begin__ = 410;
                 lp_accum__.add(beta_log<propto__>(get_base1(rho, i, "rho", 1), get_base1(rho_alpha, i, "rho_alpha", 1), get_base1(rho_beta, i, "rho_beta", 1)));
             }
-            current_statement_begin__ = 161;
+            current_statement_begin__ = 411;
             lp_accum__.add(gamma_log<propto__>(sigma2, sigma2_alpha, (1 / sigma2_beta)));
-            current_statement_begin__ = 162;
+            current_statement_begin__ = 412;
             lp_accum__.add(gamma_log<propto__>(sigma2eps, sigma2eps_alpha, (1 / sigma2eps_beta)));
-            current_statement_begin__ = 164;
+            current_statement_begin__ = 414;
             lp_accum__.add(multi_normal_cholesky_log<propto__>(y, beta0_vec, C_L));
             }
         } catch (const std::exception& e) {
