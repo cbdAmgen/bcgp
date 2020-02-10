@@ -207,6 +207,8 @@ setClass(Class = "bcgpfit",
 #' @slot sampler_args A list containing information about the sampling
 #' algorithm.
 #' @slot preds A list containing the prediction locations and the predictions.
+#' It also contains the variance at the prediction locations if the model is
+#' non-stationary.
 #' @seealso \code{\link{bcgp_sampling_and_prediction}} \linkS4class{bcgpmodel}
 #' \linkS4class{bcgpfit}
 #' @examples

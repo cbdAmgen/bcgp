@@ -401,36 +401,53 @@ setMethod("bcgp_sampling_and_prediction", "bcgpmodel",
                                                   burnin = burnin,
                                                   n_mcmc = n_mcmc,
                                                   thin = thin))
-              # out1 <- bcgp_MH(object, scaled, ...)
-              #
-              # sampler_args <- list(MH = list(num_updates = 5,
-              #                                num_adapt = 1000),
-              #                      general = list(chains = chains,
-              #                                     burnin = burnin,
-              #                                     n_mcmc = n_mcmc,
-              #                                     thin = thin))
+
             }
 
-            # return(out)
+            if(isFALSE(object@stationary)){
+              out <- new("bcgpfitpred",
+                         model_name = out1$model_name,
+                         data = out1$data,
+                         stationary = object@stationary,
+                         composite = object@composite,
+                         noise = object@noise,
+                         scaled = scaled,
+                         chains = chains,
+                         priors = object@priors,
+                         distributions = object@distributions,
+                         init = out1$init,
+                         model_pars = out1$model_pars,
+                         par_dims = out1$par_dims,
+                         sims = out1$sims,
+                         preds = list(x = x_pred,
+                                      y = out1$preds,
+                                      V = out1$preds_V),
+                         algorithm = algorithm,
+                         sampler_args = sampler_args,
+                         date = date())
+            }else{
+              out <- new("bcgpfitpred",
+                         model_name = out1$model_name,
+                         data = out1$data,
+                         stationary = object@stationary,
+                         composite = object@composite,
+                         noise = object@noise,
+                         scaled = scaled,
+                         chains = chains,
+                         priors = object@priors,
+                         distributions = object@distributions,
+                         init = out1$init,
+                         model_pars = out1$model_pars,
+                         par_dims = out1$par_dims,
+                         sims = out1$sims,
+                         preds = list(x = x_pred,
+                                      y = out1$preds),
+                         algorithm = algorithm,
+                         sampler_args = sampler_args,
+                         date = date())
 
-            new("bcgpfitpred",
-                model_name = out1$model_name,
-                data = out1$data,
-                stationary = object@stationary,
-                composite = object@composite,
-                noise = object@noise,
-                scaled = scaled,
-                chains = chains,
-                priors = object@priors,
-                distributions = object@distributions,
-                init = out1$init,
-                model_pars = out1$model_pars,
-                par_dims = out1$par_dims,
-                sims = out1$sims,
-                preds = list(x = x_pred,
-                             y = out1$preds),
-                algorithm = algorithm,
-                sampler_args = sampler_args,
-                date = date())
+            }
+
+            return(out)
 
           })

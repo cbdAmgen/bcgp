@@ -61,7 +61,9 @@ implemented by Stan, or \code{"MH"} for a Metropolis-Hastings algorithm}
 \item{\code{sampler_args}}{A list containing information about the sampling
 algorithm.}
 
-\item{\code{preds}}{A list containing the prediction locations and the predictions.}
+\item{\code{preds}}{A list containing the prediction locations and the predictions.
+It also contains the variance at the prediction locations if the model is
+non-stationary.}
 }}
 
 \examples{

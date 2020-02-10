@@ -80,34 +80,19 @@ bcgp_stan_with_pred_noncomp_s <- function(x, x_pred, scaled, chains, cores,
                               chains = chains, cores = cores, iter = iter,
                               warmup = warmup, thin = thin, control = control,
                               ...)
-  # stan_fit <- do.call(rstan::sampling, list(object = stanmodels$stanNonCompS, data = stan_data,
-  #                    pars = c("beta0", "rho", "sigma2eps", "sigma2"), thin = dots$thin,
-  #                    chains))
-  sampler_args <- get_sampler_args_stan(stan_fit)
 
-  # model_name = out1$model_name,
-  # data = out1$data,
-  # stationary = object@stationary,
-  # composite = object@composite,
-  # noise = object@noise,
-  # scaled = scaled,
-  # chains = chains,
-  # priors = object@priors,
-  # distributions = object@distributions,
-  # init = out1$inits,
-  # model_pars = out1$model_pars,
-  # par_dims = out1$par_dims,
-  # sim = out1$sim,
-  # algorithm = algorithm,
-  # sampler_args = out1$sampler_args,
-  # date = date())
+  sampler_args <- get_sampler_args_stan(stan_fit)
 
   sims_all <- rstan::As.mcmc.list(stan_fit)
 
-  colnames_y_preds <- grepl("y_pred", colnames(sims_all[[1]]))
+  if(coda::is.mcmc.list(sims_all)){
 
-  sims_parameters <- sims_all[, !colnames_y_preds, drop = TRUE]
-  sims_y_pred <- sims_all[, colnames_y_preds, drop = TRUE]
+    colnames_y_preds <- grepl("y_pred", colnames(sims_all[[1]]))
+
+    sims_parameters <- sims_all[, !colnames_y_preds, drop = TRUE]
+    sims_y_pred <- sims_all[, colnames_y_preds, drop = TRUE]
+
+  }
 
   out <- list(data = data,
               model_name = "noncomposite_stationary",
@@ -173,10 +158,14 @@ bcgp_stan_with_pred_comp_s <- function(x, x_pred, scaled, chains, cores, iter,
 
   sims_all <- rstan::As.mcmc.list(stan_fit)
 
-  colnames_y_preds <- grepl("y_pred", colnames(sims_all[[1]]))
+  if(coda::is.mcmc.list(sims_all)){
 
-  sims_parameters <- sims_all[, !colnames_y_preds, drop = TRUE]
-  sims_y_pred <- sims_all[, colnames_y_preds, drop = TRUE]
+    colnames_y_preds <- grepl("y_pred", colnames(sims_all[[1]]))
+
+    sims_parameters <- sims_all[, !colnames_y_preds, drop = TRUE]
+    sims_y_pred <- sims_all[, colnames_y_preds, drop = TRUE]
+
+  }
 
   out <- list(data = data,
               model_name = "composite_stationary",
@@ -255,9 +244,12 @@ bcgp_stan_with_pred_comp_ns <- function(x, x_pred, scaled, chains, cores, iter,
   if(coda::is.mcmc.list(sims_all)){
 
     colnames_y_preds <- grepl("y_pred", colnames(sims_all[[1]]))
+    colnames_V_preds <- grepl("V_pred", colnames(sims_all[[1]]))
 
-    sims_parameters <- sims_all[, !colnames_y_preds, drop = TRUE]
     sims_y_pred <- sims_all[, colnames_y_preds, drop = TRUE]
+    sims_V_pred <- sims_all[, colnames_V_preds, drop = TRUE]
+    sims_parameters <- sims_all[, !(colnames_y_preds | colnames_V_preds),
+                                drop = TRUE]
 
   }
 
@@ -277,6 +269,7 @@ bcgp_stan_with_pred_comp_ns <- function(x, x_pred, scaled, chains, cores, iter,
                               V = n),
               sims = sims_parameters,
               preds = sims_y_pred,
+              preds_V = sims_V_pred,
               sampler_args = sampler_args)
 
   return(out)
@@ -335,10 +328,17 @@ bcgp_stan_with_pred_noncomp_ns <- function(x, x_pred, scaled, chains, cores,
 
   sims_all <- rstan::As.mcmc.list(stan_fit)
 
-  colnames_y_preds <- grepl("y_pred", colnames(sims_all[[1]]))
+  if(coda::is.mcmc.list(sims_all)){
 
-  sims_parameters <- sims_all[, !colnames_y_preds, drop = TRUE]
-  sims_y_pred <- sims_all[, colnames_y_preds, drop = TRUE]
+    colnames_y_preds <- grepl("y_pred", colnames(sims_all[[1]]))
+    colnames_V_preds <- grepl("V_pred", colnames(sims_all[[1]]))
+
+    sims_y_pred <- sims_all[, colnames_y_preds, drop = TRUE]
+    sims_V_pred <- sims_all[, colnames_V_preds, drop = TRUE]
+    sims_parameters <- sims_all[, !(colnames_y_preds | colnames_V_preds),
+                                drop = TRUE]
+
+  }
 
   out <- list(data = data,
               model_name = "noncomposite_nonstationary",
@@ -354,6 +354,7 @@ bcgp_stan_with_pred_noncomp_ns <- function(x, x_pred, scaled, chains, cores,
                               V = n),
               sims = sims_parameters,
               preds = sims_y_pred,
+              preds_V = sims_V_pred,
               sampler_args = sampler_args)
 
   return(out)
