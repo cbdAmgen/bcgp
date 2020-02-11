@@ -270,3 +270,184 @@ setMethod("bcgp_sampling", "bcgpmodel",
                 date = date())
 
           })
+
+
+setGeneric(name = "bcgp_sampling_and_prediction",
+           def = function(object, ...) {
+             standardGeneric("bcgp_sampling_and_prediction")
+           })
+
+
+#' Draw samples from a BCGP model and make predictions
+#'
+#' \code{bcgp_sampling_and_prediction} draws samples from the model defined by
+#' class \code{bcgpmodel} and predicts at the locations in \code{x_pred}
+#'
+#' This returns an instance of S4 class \code{bcgpfitpred}. It contains
+#' information about the data, model, sampling algorithm, and sample draws from
+#' the posterior for the parameters and new predictions.
+#'
+#' @param object An instance of S4 class \code{bcgpmodel}.
+#' @param x_pred A matrix with the same number of columns as the data matrix in
+#' \code{object}.
+#' @param algorithm Either \code{"NUTS"} for the \code{No U-Turn Sampler}
+#' implemented by Stan, or \code{"MH"} for a Metropolis-Hastings algorithm
+#' @param scaled A logical indicating whether the data should be scaled before
+#' fitting. It is highly recommended to scale the data before fitting. Defaults
+#' to \code{TRUE}. Currently, only \code{scaled = TRUE} is supported, but that
+#' will change in the near future.
+#' @param chains A positive integer specifying the number of Markov chains
+#' @param cores The number of cores to use when executing the Markov chains in
+#' parallel. The default is to use the value of the \code{mc.cores} option if it
+#' has been set and otherwise to default to 1 core. However, it is recommended
+#' to set it to be as many processors as the hardware and RAM allow (up to the
+#' number of chains). See \code{\link[parallel]{detectCores}}if you don't know
+#' this number for your system.
+#' @param init Can be either the string "random" or a list of length
+#' \code{chains}. The elements of this list should be named lists, where each of
+#' these has the name of a parameter and is used to specify the initial values
+#' for that parameter for the corresponding chain.
+#'
+#' \describe{
+#' \code{init = "random"} (default):
+#' The initial values will be generated randomly from their respective prior
+#' distributions.
+#'
+#' \code{init} via list:
+#' Set initial values by providing a list equal in length to the number of
+#' Markov chains. A call to \code{create_inits()} will assist in the correct
+#' creation of this list. This is not currently supported, but will be in the
+#' future.
+#' }
+#' @param num_updates A positive integer for the number of updates in the
+#' proposal stepsize adaptation phase. Ignored if \code{algorithm = "NUTS"}.
+#' @param num_adapt A positive integer for the number of samples within each
+#' update in the proposal stepsize adaptation phase. Ignored if
+#' \code{algorithm = "NUTS"}.
+#' @param burnin A positive integer for the number of burnin samples to discard
+#' after the stepsize adaptation phase is finished. This is equivalent to the
+#' parameter \code{warmup} in \code{\link[rstan]{stan}}.
+#' @param n_mcmc The number of samples to be kept for each Markov chain.
+#' @param thin A positive integer specifying the period for saving samples. The
+#' default is 1, and this number should not be changed, as thinning isn't
+#' necessary in these models, and it throws away information. Currently, only
+#' \code{thin = 1} is supported, and this argument may be deprecated in the
+#' future.
+#' @param ... optional parameters, only if \code{algorithm = "NUTS"}. See the
+#' documentation for \code{\link[rstan]{stan}}.
+#' @param control A named list of parameters to control the NUTS algorithm's
+#' behavior. It defaults to NULL so all the default values are used. Ignored
+#' unless  \code{algorithm = "NUTS"}.
+#' @return An instance of S4 class \code{bcgpfitpred}. It contains information
+#' about the data, model, sampling algorithm, and sample draws from
+#' the posterior for the parameters and new predictions.
+#'
+#' @export
+setMethod("bcgp_sampling_and_prediction", "bcgpmodel",
+          function(object, x_pred, algorithm = c("NUTS", "MH"), scaled = TRUE,
+                   chains = 4L, cores = getOption("mc.cores", 1L),
+                   init = "random", num_updates = 5, num_adapt = 1000,
+                   burnin = 1000, n_mcmc = 10000, thin = 1, ...,
+                   control = NULL) {
+
+            ## TODO: error checking for all the inputs here
+
+            if(is.vector(x_pred)) x_pred <- as.matrix(x_pred)
+            check_valid_x_pred_matrix(x_pred, object@data$x)
+
+            if(!isFALSE(scaled)){
+              warning(strwrap(prefix = " ", initial = "",
+                              "Currently predictions are only supported if data
+                              is unscaled. Changing 'scaled' to be FALSE."))
+              scaled <- FALSE
+            }
+
+            if(thin != 1){
+              warning(strwrap(prefix = " ", initial = "",
+                              "Thinning is not currently supported and is
+                              generally unnecessary. Changing 'thin' to 1."))
+            }
+            thin <- 1
+
+            algorithm <- match.arg(algorithm)
+
+            if(algorithm == "NUTS"){
+
+              warmup <- burnin
+              iter <- n_mcmc + warmup
+              out1 <- bcgp_stan_with_pred(object, x_pred, scaled, chains, cores,
+                                          iter, warmup, thin, control, ...)
+
+              sampler_args <- list(Stan = out1$sampler_args,
+                                   general = list(chains = chains,
+                                                  burnin = burnin,
+                                                  n_mcmc = n_mcmc,
+                                                  thin = thin))
+
+            }
+            else{
+              warning(strwrap(prefix = " ", initial = "",
+                              "Metropolis_Hastings and Gibbs sampler currently
+                              not supported. Model will be fit with Stan using
+                              the NUTS algorithm."))
+
+              warmup <- burnin
+              iter <- n_mcmc + warmup
+              out1 <- bcgp_stan_with_pred(object, x_pred, scaled, chains, cores,
+                                          iter, warmup, thin, control, ...)
+
+              sampler_args <- list(Stan = out1$sampler_args,
+                                   general = list(chains = chains,
+                                                  burnin = burnin,
+                                                  n_mcmc = n_mcmc,
+                                                  thin = thin))
+
+            }
+
+            if(isFALSE(object@stationary)){
+              out <- new("bcgpfitpred",
+                         model_name = out1$model_name,
+                         data = out1$data,
+                         stationary = object@stationary,
+                         composite = object@composite,
+                         noise = object@noise,
+                         scaled = scaled,
+                         chains = chains,
+                         priors = object@priors,
+                         distributions = object@distributions,
+                         init = out1$init,
+                         model_pars = out1$model_pars,
+                         par_dims = out1$par_dims,
+                         sims = out1$sims,
+                         preds = list(x = x_pred,
+                                      y = out1$preds,
+                                      V = out1$preds_V),
+                         algorithm = algorithm,
+                         sampler_args = sampler_args,
+                         date = date())
+            }else{
+              out <- new("bcgpfitpred",
+                         model_name = out1$model_name,
+                         data = out1$data,
+                         stationary = object@stationary,
+                         composite = object@composite,
+                         noise = object@noise,
+                         scaled = scaled,
+                         chains = chains,
+                         priors = object@priors,
+                         distributions = object@distributions,
+                         init = out1$init,
+                         model_pars = out1$model_pars,
+                         par_dims = out1$par_dims,
+                         sims = out1$sims,
+                         preds = list(x = x_pred,
+                                      y = out1$preds),
+                         algorithm = algorithm,
+                         sampler_args = sampler_args,
+                         date = date())
+
+            }
+
+            return(out)
+
+          })

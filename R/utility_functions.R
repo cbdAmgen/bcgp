@@ -41,3 +41,61 @@ get_sampler_args_stan <- function(x){
        control = attr(x@sim$samples[[1]], "args")$control)
 
 }
+
+check_valid_x_pred_matrix <- function(x_pred, x){
+
+  if(!is.matrix(x_pred)){
+    stop("'x_pred' should be a matrix.")
+  }
+  if(ncol(x_pred) != ncol(x)){
+    stop("'x' and 'x_pred' must have the same number of columns.")
+  }
+  if(any(is.na(x_pred))){
+    stop("'x_pred' should not have any NA values.")
+  }
+
+}
+
+coda_summary <- function(samples, quantiles){
+
+  n_eff <- as.matrix(floor(coda::effectiveSize(samples)))
+  colnames(n_eff) <- "n_eff"
+  R_hats <- as.matrix(coda::gelman.diag(samples)$psrf[, "Point est."])
+  colnames(R_hats) <- "Rhat"
+  long_sum <- summary(samples, quantiles)
+
+  cbind(long_sum$statistics, long_sum$quantiles,
+        n_eff, R_hats)
+
+}
+
+check_valid_truth <- function(object, truth){
+
+  if(!is.numeric(truth)){
+    stop("'truth' must be numeric.")
+  }
+  if(length(truth) != nrow(object@preds$x)){
+    stop(strwrap(prefix = " ", initial = "",
+                 "The length of 'truth' is not the same as the length
+                           of the predictions."))
+  }
+  if(any(is.na(truth))){
+    stop("'truth' must not contain any NA values.")
+  }
+
+}
+
+check_prob <- function(x){
+
+  if(!is.numeric(x)){
+    stop("'x' must be numeric.")
+  }
+  if(length(x) != 1){
+    stop("'x' must have length 1.")
+  }
+  if(!is.null(x) && (x <= 0 || x >= 1)){
+    stop(strwrap(prefix = " ", initial = "",
+                 "x must be in the interval (0, 1)."))
+  }
+
+}

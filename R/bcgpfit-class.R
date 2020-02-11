@@ -85,3 +85,71 @@ setMethod("summary", signature = "bcgpfit",
 
           }
 )
+
+setGeneric(name = "posterior_interval",
+           def = function(object, ...) {
+             standardGeneric("posterior_interval")
+           })
+
+#' \code{posterior_interval} method for a \code{bcgpfit} object
+#'
+#' This calculates Bayesian uncertainty intervals, commonly called
+#' \emph{credible} intervals
+#'
+#' @param object a bcgpfitpred object
+#' @param prob A numeric scalar between 0 and 1 specifying the uncertainty
+#' interval width. Defaults to 0.95.
+#' @param type A character specifying whether "central" intervals based on
+#' quantiles or highest posterior density ("HPD") intervals should be
+#' constructed. Defaults to "central".
+#' @param pars A character vector specifying the parameters for which to return
+#' intervals.
+#' @return A matrix with two columns and as many rows as model parameters
+#' (or a subset of parameters specified by the user). For a given value of
+#' \code{prob}, \eqn{p}, the columns correspond to the lower and upper
+#' \eqn{100p}\% interval limits and have the names \code{lower} and
+#' \code{upper}.
+#'
+#' @examples
+#' data_sim <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE,
+#'                      d = 2, decomposition = TRUE)
+#'
+#' model <- bcgpmodel(x = data_sim@training$x, y = data_sim@training$y,
+#'                    composite = TRUE, stationary = FALSE, noise = FALSE)
+#' fit <- bcgp_sampling(model, scaled = FALSE, cores = 4,
+#'                      n_mcmc = 500, burnin = 200)
+#'
+#' posterior_interval(fit, prob = 0.90, type = "central",
+#'                    pars = c("beta0", "w", "rhoG", "rhoL"))
+#'
+#' @export
+setMethod("posterior_interval", signature = "bcgpfit",
+          function(object, prob = 0.95, type = c("central", "HPD"), pars) {
+
+
+            if(missing(pars)) pars <- object@model_pars
+
+            check_prob(prob)
+            type <- match.arg(type)
+
+            if(coda::is.mcmc.list(object@sims)){
+
+              pars2 <- paste0("^", pars)
+              pars_to_keep <- grepl(paste(pars2, collapse = "|"),
+                                    colnames(object@sims[[1]]))
+              parameter_matrix <- as.matrix(object@sims[, pars_to_keep,
+                                                        drop = TRUE])
+
+              if(type == "central"){
+                out <- central_intervals(parameter_matrix, prob)
+              }else{
+                out <- hpd_intervals(parameter_matrix, prob)
+              }
+            }else{
+              stop(strwrap(prefix = " ", initial = "",
+                           "The fitted object is corrupted."))
+
+            }
+
+            return(out)
+          })

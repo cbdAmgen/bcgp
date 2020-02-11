@@ -207,17 +207,20 @@ setClass(Class = "bcgpfit",
 #' @slot sampler_args A list containing information about the sampling
 #' algorithm.
 #' @slot preds A list containing the prediction locations and the predictions.
-#' @seealso \code{\link{bcgp_sampling}} \linkS4class{bcgpmodel}
-#' \linkS4class{bcgpfit} \code{\link[bcgp]{predict}}
-#' \code{\link[bcgp]{posterior_predict}}
+#' It also contains the variance at the prediction locations if the model is
+#' non-stationary.
+#' @seealso \code{\link{bcgp_sampling_and_prediction}} \linkS4class{bcgpmodel}
+#' \linkS4class{bcgpfit}
 #' @examples
 #' data_sim <- bcgpsims(composite = TRUE, stationary = FALSE, noise = FALSE)
 #' model <- bcgpmodel(x = data_sim@training$x, y = data_sim@training$y,
 #'                    composite = TRUE, stationary = FALSE, noise = TRUE)
 #' \dontrun{
-#' bcgp_sampling(model, algorithm = "NUTS", scaled = TRUE, chains = 3L,
-#'               cores = 1L, control = list(adapt_delta = 0.99,
-#'                                          max_treedepth = 15))
+#' bcgp_sampling_and_prediction(model, x_pred = data_sim@test$x,
+#'                              algorithm = "NUTS", scaled = TRUE,
+#'                              chains = 3L, cores = 1L,
+#'                              control = list(adapt_delta = 0.99,
+#'                                             max_treedepth = 15))
 #' }
 #' @export
 setClass(Class = "bcgpfitpred",
